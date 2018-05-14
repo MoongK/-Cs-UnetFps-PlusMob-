@@ -95,14 +95,25 @@ public class Gun : NetworkBehaviour {
                            1 << LayerMask.NameToLayer("Player") |
                            1 << LayerMask.NameToLayer("Mob")))
         {
-            NetworkIdentity ni = hit.transform.GetComponentInParent<NetworkIdentity>();
-            if (ni != null) {
+            NetworkIdentity ni = hit.transform.root.GetComponent/*InParent*/<NetworkIdentity>();
+            if (ni != null)
+            {
                 RpcHitReaction(ni.netId, hit.point, hit.normal);
-                Health health = hit.transform.GetComponent<Health>();
+                Health health = hit.transform.root.GetComponent<Health>();
                 if (health != null)
-                    health.TakeDamage(10);
+                {
+                    if (hit.collider.transform.CompareTag("Head"))
+                        health.TakeDamage(50, gameObject);
+                    else
+                        health.TakeDamage(10, gameObject);
+
+                }
             }
-        }   
+            else
+            {
+                print("who : " + hit.transform.root.name);
+            }
+        }
     }
     [ClientRpc]
     private void RpcHitReaction(NetworkInstanceId netId, Vector3 point, Vector3 normal)

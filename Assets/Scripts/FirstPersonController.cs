@@ -62,9 +62,9 @@ public class FirstPersonController : NetworkBehaviour {
                 rb.AddForce(transform.up * jumpForce);
         }
 
-        Ray ray = new Ray(transform.position, -transform.up);
+        Ray ray = new Ray(transform.position + new Vector3(0, 0.02f), -transform.up);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 1 + 0.1f, groundedMask))
+        if (Physics.Raycast(ray, out hit, 0.5f, groundedMask))
             grounded = true;
         else
             grounded = false;

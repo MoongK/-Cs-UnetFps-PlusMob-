@@ -8,6 +8,7 @@ public class RoamingWalk : StateMachineBehaviour {
 
     List<Transform> wayPoints;
     Vector3 nextPoint;
+    public Transform targetPlayer;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -27,22 +28,31 @@ public class RoamingWalk : StateMachineBehaviour {
     //OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(wayPoints.Count >= 2)
+        if (targetPlayer != null)
         {
-            //float dist = Vector3.Distance(animator.transform.position, nextPoint);
-            float dist = Vector2.Distance(new Vector2(animator.transform.position.x, animator.transform.position.z), new Vector2(nextPoint.x, nextPoint.z));
-            if(dist < 0.1f)
+            animator.transform.position = Vector3.MoveTowards(animator.transform.position, targetPlayer.position, moveSpeed * Time.deltaTime);
+            //animator.transform.rotation = Quaternion.Slerp(animator.transform.rotation, Quaternion.LookRotation(targetPlayer.position), 10f);
+            animator.transform.LookAt(targetPlayer);
+        }
+        else
+        {
+            if (wayPoints.Count >= 2)
             {
-                currentPoint++;
-                if (currentPoint >= wayPoints.Count)
-                    currentPoint = 0;
-                nextPoint = wayPoints[currentPoint].transform.position;
-            }
-            Vector3 dir = nextPoint - animator.transform.position;
-            dir.y = 0f;
+                //float dist = Vector3.Distance(animator.transform.position, nextPoint);
+                float dist = Vector2.Distance(new Vector2(animator.transform.position.x, animator.transform.position.z), new Vector2(nextPoint.x, nextPoint.z));
+                if (dist < 0.1f)
+                {
+                    currentPoint++;
+                    if (currentPoint >= wayPoints.Count)
+                        currentPoint = 0;
+                    nextPoint = wayPoints[currentPoint].transform.position;
+                }
+                Vector3 dir = nextPoint - animator.transform.position;
+                dir.y = 0f;
 
-            animator.transform.rotation = Quaternion.Slerp(animator.transform.rotation, Quaternion.LookRotation(dir), 0.1f);
-            animator.transform.position = Vector3.MoveTowards(animator.transform.position, nextPoint, moveSpeed * Time.deltaTime);
+                animator.transform.rotation = Quaternion.Slerp(animator.transform.rotation, Quaternion.LookRotation(dir), 0.1f);
+                animator.transform.position = Vector3.MoveTowards(animator.transform.position, nextPoint, moveSpeed * Time.deltaTime);
+            }
         }
     }
 

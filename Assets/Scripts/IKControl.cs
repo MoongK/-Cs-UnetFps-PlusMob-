@@ -22,23 +22,21 @@ public class IKControl : NetworkBehaviour {
     {
         if (ikActive)
         {
-            print("active");
             anim.SetLookAtWeight(1f);
             anim.SetLookAtPosition(lookTarget.position);
 
             anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
             anim.SetIKPosition(AvatarIKGoal.RightHand, rightHandTarget.position);
-            //anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
-            //anim.SetIKRotation(AvatarIKGoal.RightHand, rightHandTarget.rotation);
+            anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
+            anim.SetIKRotation(AvatarIKGoal.RightHand, rightHandTarget.rotation);
 
             anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
             anim.SetIKPosition(AvatarIKGoal.LeftHand, leftHandTarget.position);
-            //anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
-            //anim.SetIKRotation(AvatarIKGoal.LeftHand, leftHandTarget.rotation);
+            anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1);
+            anim.SetIKRotation(AvatarIKGoal.LeftHand, leftHandTarget.rotation);
         }
         else
         {
-            print("nonactive");
             anim.SetLookAtWeight(0);
             anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
             anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);

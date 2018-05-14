@@ -16,7 +16,22 @@ public class Health : NetworkBehaviour
 
     public RectTransform healthBar;
 
-	public void TakeDamage(int amount)
+    //public Camera SendmyCam()
+    //{
+    //    if (isLocalPlayer)
+    //    {
+    //        print("hi local! - " + transform.root.name);
+    //        return transform.Find("Camera").GetComponent<Camera>();
+    //    }
+    //    else
+    //    {
+    //        print("Null Cam send : " + transform.root.name);
+    //        return null;
+    //    }
+            
+    //}
+
+    public void TakeDamage(int amount, GameObject WhoShootedMe)
     {
         if (!isServer)
             return;
@@ -39,12 +54,19 @@ public class Health : NetworkBehaviour
                 RpcRespawn();
             }
         }
+        if (transform.root.gameObject.layer == 12)
+        {
+            if ((WhoShootedMe != null) && (WhoShootedMe.layer == 11))
+            {
+                transform.GetComponent<Animator>().GetBehaviour<RoamingWalk>().targetPlayer = WhoShootedMe.transform;
+            }
+        }
     }
 
     void OnChangeHealth(int health) {
-        print("HP: " + currentHealth);
         currentHealth = health;     // Important !
         healthBar.localScale = new Vector3((float)currentHealth / maxHealth, 1f, 1f);        
+        print("HP: " + currentHealth);
     }
 
     [ClientRpc]
